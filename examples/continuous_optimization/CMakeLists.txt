@@ -23,7 +23,7 @@ set(CONTINUOUS_OPTIMIZATION_SOURCE
     optimizer_test_result.cpp
 )
 
-set(BOOST_ROOT "")
+
 find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 

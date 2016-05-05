@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 2.8)
 set(PROJECT_NAME genetic_algorithm_example)
 project(${PROJECT_NAME})
 
-set(BOOST_ROOT "")
 find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 

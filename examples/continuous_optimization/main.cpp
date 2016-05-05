@@ -44,7 +44,7 @@ int main()
             tester.Test(optimizersProvider, functionsProvider);
 
     std::ofstream fileout("optimizers_output.txt");
-    OutputResults(fileout, results);
+    OutputResults(std::cout, results);
 
     std::cout << "Finished" << std::endl;
 
