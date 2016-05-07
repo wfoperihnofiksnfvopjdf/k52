@@ -1,22 +1,22 @@
-#include "stdafx.h"
-#include "Imfcc.h"
-//#include <c:/k52/k52/include/k52/dsp/transform/fast_fourier_transform.h>
 
+#include "Imfcc.h"
 
 namespace k52
 {
 	namespace dsp
 	{
-		IMelFrequiencyCepstralCoefficients::IMelFrequiencyCepstralCoefficients 	(const std::vector<double>& seque):sequence(seque)
+		IMelFrequiencyCepstralCoefficients::IMelFrequiencyCepstralCoefficients 	
+			(const std::vector<double>& seque, IFourierTransform& Furie,double epsel):sequence(seque),FFM(Furie)
 		{
-			//сохран€ем интерфейс фурье преобразовани€.
-			Add_zvuk(sequence);
+			//уже сохранили интерфейс фурье преобразовани€.
+			epselon = epsel;//допустима€ ошибка
+			Add_zvuk(sequence);//получаем коэфициенты
 		};
-		IMelFrequiencyCepstralCoefficients::		~IMelFrequiencyCepstralCoefficients () 
-		{
-			
-			std::vector< double > MFCC;
-			std::vector< double > Window; //может не нужно?
+		IMelFrequiencyCepstralCoefficients::~IMelFrequiencyCepstralCoefficients () 
+		{		
+			MFCC.erase;
+			Window.erase;
+			FFM.~IFourierTransform();
 		};
 		
 		std::vector <double> IMelFrequiencyCepstralCoefficients::GetMFCC()//сделан				
@@ -36,7 +36,24 @@ namespace k52
 		//сделан
 		void		 		 IMelFrequiencyCepstralCoefficients::	analising()//аналитика высчитывающа€ что коэффициенты с определенного места €вл€ютс€ лишними (допустим нули)
 		{
+			for (int i = 0;i < MFCC.size;i++)
+			if (MFCC[i]<epselon)
+			{
+				bool verno = false;
+				for (int j = i + 1;j < MFCC.size;j++)
+					if (MFCC[j]>epselon)
+					{
+						verno = true;
+						break;
+					}
+				if (verno == false)
+				{
+					MFCC.resize(i - 1);
+					break;
+				}
+			}
 		};
+		//сделан
 		std::vector <double> IMelFrequiencyCepstralCoefficients::	GetModulComplex(std::vector< std::complex<double>> vhod) 
 		{
 			std::vector <double> vuhod(vhod.size);
@@ -45,19 +62,22 @@ namespace k52
 			return vuhod;
 		};
 		//сделан
-		void IMelFrequiencyCepstralCoefficients::Add_zvuk(const std::vector< double >& vhod)
+		void IMelFrequiencyCepstralCoefficients::Add_zvuk(const std::vector< double >& vhod,bool prost)//сердце метода
 		{
+
 			//фурье метод
-			
+			//FFM.Transform()//WTF why incoming in complex?!
 			ResultFFT.erase;
 			//конец
 			sequence.clear;
 		};
 		std::vector<double> IMelFrequiencyCepstralCoefficients::Add_zvuk(const std::vector< double >&vhod) 
 		{
-			Add_zvuk(vhod);
+			Add_zvuk(vhod,true);
+			analising();
 			return MFCC;
 		};
+		//сделан
 		//--------------------------------------------------------------------------------------------------
 		std::vector<double> CosPreobr::getCosPreobr(std::vector<double> vhod)
 		{

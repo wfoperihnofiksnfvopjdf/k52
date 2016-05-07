@@ -1,14 +1,10 @@
 #pragma once
-//#include <k52/dsp/transform/fast_fourier_transform.h>
-#include <vector>
-#include <Math.h>
-//#include <c:/k52/k52/include/k52/dsp/transform/fast_fourier_transform.h>
-//#include <stdexcept>
 
-//#include <boost/smart_ptr/shared_ptr.hpp>
+
+#include <Math.h>
+#include <c:/k52/k52/include/k52/dsp/transform/i_fourier_transform.h>
 #include <memory>
-#include <complex>
-#include <vector>
+
 using ::std::complex;
 
 
@@ -20,19 +16,20 @@ namespace k52
 		class IMelFrequiencyCepstralCoefficients 
 		{
 		public:
-			IMelFrequiencyCepstralCoefficients(const std::vector< double >& sequence);
+			IMelFrequiencyCepstralCoefficients(const std::vector< double >&, IFourierTransform& ,double);
 			~IMelFrequiencyCepstralCoefficients();
 			std::vector<double> GetMFCC();//получить все коэффициенты
 			std::vector<double> GetMFCC(int); //получить определенное количество коэффициентов
-			void Add_zvuk(const std::vector< double >& ); //вызывается в тех случаях когда нужно перепостроить коэффициенты по новым данным
+			void Add_zvuk(const std::vector< double >& , bool); //вызывается в тех случаях когда нужно перепостроить коэффициенты по новым данным
 			std::vector<double> Add_zvuk(const std::vector< double >&);
 		private:
 
-			
-			const std::vector< double >& sequence;
-			std::vector< std::complex< double > > ResultFFT;
-			std::vector< double > MFCC;
-			std::vector< double > Window; //может не нужно?
+			double epselon;//используется в analizing
+			IFourierTransform& FFM;
+			const std::vector< double >& sequence;//вектор звука, удаляется после обработки в Add_zvuk
+			std::vector< std::complex< double > > ResultFFT;//итог преобразования фурье, удаляется после обработки в Add_zvuk
+			std::vector< double > MFCC; //сами коэф, удал в деструкторе
+			std::vector< double > Window; //может не нужно? удал в деструкторе
 			void analising();
 			std::vector<double> GetModulComplex(std::vector< std::complex<double>>);
 		};
