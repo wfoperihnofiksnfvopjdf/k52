@@ -54,7 +54,7 @@ namespace k52
 			}
 		};
 		//сделан
-		std::vector <double> IMelFrequiencyCepstralCoefficients::	GetModulComplex(std::vector< std::complex<double>> vhod) 
+		std::vector <double> IMelFrequiencyCepstralCoefficients::	GetModulOfComplex(std::vector< std::complex<double>> vhod) 
 		{
 			std::vector <double> vuhod(vhod.size);
 			for (int i = 0;i < vhod.size;i++)
@@ -64,11 +64,20 @@ namespace k52
 		//сделан
 		void IMelFrequiencyCepstralCoefficients::Add_zvuk(const std::vector< double >& vhod,bool prost)//сердце метода
 		{
-
+			std::vector< std::complex<double>> WithFurie(vhod.size);
+			for (int i = 0;i < vhod.size;i++)
+				WithFurie[i] = vhod[i];
 			//фурье метод
-			//FFM.Transform()//WTF why incoming in complex?!
-			ResultFFT.erase;
-			//конец
+			
+			WithFurie =FFM.Transform(WithFurie);//WTF why incoming in complex?!
+			std::vector <double> FurieDouble=GetModulOfComplex(WithFurie);//берем модуль элементов полученного массива
+			//охапка MFCC и плов готов
+			MFCC = Multiply_Window_Vektor(FurieDouble); //умножаем на окно, где его же и находим и сохраняем
+			MFCC = GetSqrLog(MFCC);//берем квадрат логорифм
+			MFCC = getCosPreobr(MFCC);//берем косинусное преобразование
+			
+			//конец и очистка мусора
+			WithFurie.erase;
 			sequence.clear;
 		};
 		std::vector<double> IMelFrequiencyCepstralCoefficients::Add_zvuk(const std::vector< double >&vhod) 
@@ -97,7 +106,7 @@ namespace k52
 			return a;
 		};
 		//--------------------------------------------------------------------------------------------------
-		std::vector< double > MultiWindow::Multiply_Window_Vektor(std::complex< double > vhod)
+		std::vector< double > MultiWindow::Multiply_Window_Vektor(std::vector< double > vhod)//Наследуется интерфейс в котором сохраняется коэф окна.
 		{
 			std::vector <double> a(3);
 			return a;
