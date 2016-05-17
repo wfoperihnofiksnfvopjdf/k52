@@ -9,6 +9,9 @@ set(DSP_HEADERS
     ${DSP_COMMON_INCLUDE}/akima_wavelet_function.h
     ${DSP_COMMON_INCLUDE}/cwt.h
     ${DSP_COMMON_INCLUDE}/mhat_wavelet_function.h
+    ${DSP_COMMON_INCLUDE}/Imfcc.h
+    ${DSP_COMMON_INCLUDE}/cosin_preobrasovanie.h
+    ${DSP_COMMON_INCLUDE}/windows.h
     ${DSP_COMMON_INCLUDE}/haar_wavelet_function.h
     ${DSP_COMMON_INCLUDE}/morlet_wavelet_function.h
     ${DSP_COMMON_INCLUDE}/spline.h
@@ -35,6 +38,9 @@ set(DSP_SOURCE
     akima_wavelet_function.cpp
     cwt.cpp
     mhat_wavelet_function.cpp
+    Imfcc.cpp
+    cosin_preobrasovanie.cpp
+    windows.cpp
     haar_wavelet_function.cpp
     morlet_wavelet_function.cpp
     spline_based_wavelet_function.cpp
@@ -64,7 +70,7 @@ add_library(
     ${DSP_HEADERS}
 )
 
-if(K52_LIBS_TYPE_DYNAMIC)
+if(K52_LIindowsBS_TYPE_DYNAMIC)
     target_link_libraries(
         ${k52_DSP_LIB}
         ${FFTW3_LIBRARIES}
