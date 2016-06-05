@@ -5,24 +5,22 @@ namespace k52
 	namespace dsp
 	{
 		IMelFrequiencyCepstralCoefficients::IMelFrequiencyCepstralCoefficients
-			(const std::vector<double> seque,boost::shared_ptr <IFourierTransform> Furie,double epsel):sequence(seque)//,FFM(Furie)
+			(const std::vector<double> seque,boost::shared_ptr <IFourierTransform> Furie,double epsel):sequence(seque),SizeWindow(4)
 		{
 
 			FFM = Furie;//сохранили интерфейс фурье преобразовани€.
 			epselon = epsel;//допустима€ ошибка
-			Add_zvuk(sequence,4);//получаем коэфициенты
+			Add_zvuk(sequence,SizeWindow);//получаем коэфициенты
 		};
 		IMelFrequiencyCepstralCoefficients::~IMelFrequiencyCepstralCoefficients () 
 		{		
 			//MFCC.erase;
 			FFM->~IFourierTransform();
 		};
-		
 		std::vector <double> IMelFrequiencyCepstralCoefficients::GetMFCC()//сделан				
 		{
 			return GetMFCC(MFCC.size());
 		};	
-		//сделан
 		std::vector <double> IMelFrequiencyCepstralCoefficients::GetMFCC(size_t i)
 		{
 			if (i > MFCC.size())
@@ -33,7 +31,7 @@ namespace k52
 			return a;
 		}; 
 		//сделан
-		void IMelFrequiencyCepstralCoefficients::	analising()//аналитика высчитывающа€ что коэффициенты с определенного места €вл€ютс€ лишними (допустим нули)
+		void IMelFrequiencyCepstralCoefficients::	analising()
 		{
 			size_t N = MFCC.size();
 			for (size_t i = 0;i < N;i++)
@@ -53,25 +51,25 @@ namespace k52
 					break;
 				}
 			}
-		};
+		}; //аналитика высчитывающа€ что коэффициенты с определенного места €вл€ютс€ лишними (допустим нули)
 		//сделан
-		std::vector <double> IMelFrequiencyCepstralCoefficients::	GetModulOfComplex(std::vector< std::complex<double>> vhod) 
+		std::vector <double> IMelFrequiencyCepstralCoefficients::	GetModulOfComplex(std::vector< std::complex<double>> inputData) 
 		{
-			size_t N = vhod.size();
-			std::vector <double> vuhod(N);
+			size_t N = inputData.size();
+			std::vector <double> outputData(N);
 			for (size_t i = 0;i < N;i++)
-				vuhod[i] = abs(vhod[i]);
-			return vuhod;
+				outputData[i] = abs(inputData[i]);
+			return outputData;
 		};
 		//сделан
-		template <typename T> IMelFrequiencyCepstralCoefficients::FrecInMel(T f)
+		template <typename T> T  IMelFrequiencyCepstralCoefficients::FrecInMel(T f)
 		{
-			return (T)(1127.01048*log(1 + f / 700));
+			return (T)(1127.01048*log(1 + f / 700));//(T)(1127.01048*log(1 + f / 700));
 		};
 		//сделан
-		template <typename T> IMelFrequiencyCepstralCoefficients::MelInFrec(T m)
+		template <typename T> T IMelFrequiencyCepstralCoefficients::MelInFrec(T m)
 		{
-			return (T)(700 * (exp(m / 1127.01048) - 1));
+			return (T)(700 * (exp(m / 1127.01048) - 1));//(T)(700 * (exp(m / 1127.01048) - 1));
 		};
 		//сделан
 		void IMelFrequiencyCepstralCoefficients::Add_zvuk(const std::vector< double > vhod, size_t rasOk,/*размер окна*/bool prost)//сердце метода
@@ -101,12 +99,11 @@ namespace k52
 		std::vector< double >IMelFrequiencyCepstralCoefficients::EnergyTringle(std::vector< double >& vhod, size_t rasOk)
 		{
 			size_t N = vhod.size();
-			size_t KolOkon = FrecInMel(N) / rasOk-1;//находим количество окон
+			size_t KolOkon = (size_t)(FrecInMel(N) / rasOk-1);//находим количество окон
 			std::vector <double> Energia(KolOkon);
 			std::vector <double> mel(N);
 			for ( double i = 1;i <= N;i++)
 				mel[i-1] = FrecInMel(i);
-			//double nachaloM = mel[0];
 			size_t nachaloF = 0,sredina;
 			for (size_t i = 0;i<KolOkon;i++)
 			{

@@ -3,8 +3,6 @@
 
 #include <Math.h>
 #include <cmath>
-#include <vector>
-#include <complex>
 #include <k52/dsp/transform/i_fourier_transform.h>
 #include <k52/dsp/windows.h>
 #include <k52/dsp/cosin_preobrasovanie.h>
@@ -25,15 +23,16 @@ namespace k52
 			void			    Add_zvuk(const std::vector< double >, size_t, bool); //вызывается в тех случаях когда нужно перепостроить коэффициенты по новым данным
 			std::vector<double> Add_zvuk(const std::vector< double >, size_t);
 		private:
+			size_t SizeWindow;
 			std::vector< double >EnergyTringle(std::vector< double >&, size_t);
 			template <typename T > T FrecInMel(T);
 			template <typename T > T MelInFrec(T);
-			double epselon;							//ошибка, используется в analizing
 			boost::shared_ptr <IFourierTransform> FFM;		//интерфейс фурье
-			const std::vector< double >& sequence;	//вектор звука, удаляется после обработки в Add_zvuk
-			std::vector< double > MFCC;				//сами коэфициенты, удаляется в деструкторе
-			void analising();
-			std::vector<double> GetModulOfComplex(std::vector< std::complex<double>>);
+			const std::vector< double >& sequence;			//вектор звука, удаляется после обработки в Add_zvuk
+			std::vector< double > MFCC;						//сами коэфициенты, удаляется в деструкторе
+			double epselon;									//ошибка, используется в analizing
+			void analising();								//удаляем пустые коэффициенты
+			std::vector<double> GetModulOfComplex(std::vector< std::complex<double>>); 
 		};
 	} // namespace dsp
 } // namespace k52
